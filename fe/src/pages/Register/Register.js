@@ -3,43 +3,48 @@ import { Link, useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import chatbotImg from "../../asssets/images/chatbot.png";
 import { useDispatch, useSelector } from "react-redux";
-import { authenticate } from "../../redux/features/userSlice";
-import "./Login.css";
-const LoginPage = () => {
+import { signup, setMessageSignup } from "../../redux/features/userSlice";
+import "./Register.css";
+const RegisterPage = () => {
   let dispatch = useDispatch();
   let navigate = useNavigate();
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
   const [serviceURL, setServiceURL] = useState("");
   const { messageSignup, checked } = useSelector((state) => state.user);
-  const handleUsernameChange = (e) => {
-    setUsername(e.target.value);
+
+  // load after register (chỗ này phải đợi nó update data chứ không consol.log dưới handle được)
+  // sau đó set nó về rỗng sau khi hiển thị thông báo
+  useEffect(() => {
+    if (messageSignup) {
+      alert(messageSignup);
+      navigate("/login");
+      dispatch(setMessageSignup(""));
+    }
+  }, [messageSignup, navigate]);
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
   };
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
   };
-
+  const handleNameChange = (e) => {
+    setUsername(e.target.value);
+  };
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const serviceURL = urlParams.get("serviceURL");
     setServiceURL(serviceURL);
   }, []);
-  const handleOnclickLogin = (e) => {
-    console.log("messageSignup in login", messageSignup);
-    dispatch(
-      authenticate({ username: username, password: password, serviceURL })
-    );
-    console.log(
-      "CLICK LOGIN with username is ",
-      username,
-      " pass is ",
-      password
-    );
-    navigate("/");
+  const handleOnclickRegister = (e) => {
+    e.preventDefault();
+    dispatch(signup({ email: email, password: password, username: username }));
   };
+
   const action = (dispatch) => {
     return {
-      authenticate: () => dispatch(authenticate),
+      signup: () => dispatch(signup),
     };
   };
   return (
@@ -80,19 +85,19 @@ const LoginPage = () => {
           <div className="col-md-6 right-box">
             <div className="row align-items-center">
               <div className="header-text mb-4">
-                <h2>Hello, Again</h2>
-                <p>We are happy to have you back.</p>
+                <h2>Register form</h2>
+                <p>Please type your information box below</p>
               </div>
               <div className="input-group mb-3">
                 <input
                   type="text"
                   className="form-control form-control-lg bg-light fs-6"
                   placeholder="Email address"
-                  name="username"
-                  onChange={handleUsernameChange}
+                  name="email"
+                  onChange={handleEmailChange}
                 />
               </div>
-              <div className="input-group mb-1">
+              <div className="input-group mb-3">
                 <input
                   type="password"
                   className="form-control form-control-lg bg-light fs-6"
@@ -101,7 +106,16 @@ const LoginPage = () => {
                   onChange={handlePasswordChange}
                 />
               </div>
-              <div className="input-group mb-5 d-flex justify-content-between">
+              <div className="input-group mb-3">
+                <input
+                  type="text"
+                  className="form-control form-control-lg bg-light fs-6"
+                  placeholder="Username"
+                  name="username"
+                  onChange={handleNameChange}
+                />
+              </div>
+              {/* <div className="input-group mb-5 d-flex justify-content-between">
                 <div className="form-check">
                   <input
                     type="checkbox"
@@ -114,22 +128,22 @@ const LoginPage = () => {
                   >
                     <small>Remember Me</small>
                   </label>
-                </div>
-                <div className="forgot">
+                </div> */}
+              {/* <div className="forgot">
                   <small>
                     <a href="#">Forgot Password?</a>
                   </small>
-                </div>
-              </div>
+                </div> */}
+              {/* </div> */}
               <div className="input-group mb-3">
                 <button
                   className="btn btn-lg btn-primary w-100 fs-6"
-                  onClick={handleOnclickLogin}
+                  onClick={handleOnclickRegister}
                 >
-                  Login
+                  Register
                 </button>
               </div>
-              <div className="input-group mb-3">
+              {/* <div className="input-group mb-3">
                 <button className="btn btn-lg btn-light w-100 fs-6">
                   <img
                     src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/1024px-Google_%22G%22_logo.svg.png"
@@ -138,10 +152,10 @@ const LoginPage = () => {
                   />
                   <small>Sign In with Google</small>
                 </button>
-              </div>
+              </div> */}
               <div className="row">
                 <small>
-                  Don't have account? <a href="/signup">Sign Up</a>
+                  <a href="login">Already have account?</a>
                 </small>
               </div>
             </div>
@@ -152,4 +166,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default RegisterPage;

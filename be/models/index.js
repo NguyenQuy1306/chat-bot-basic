@@ -1,6 +1,20 @@
 const pool = require("../loaders/db");
+let { env } = require("../config");
 const bcrypt = require("bcryptjs");
 const salt = bcrypt.genSaltSync(10);
+const { Sequelize, Datatypes } = require("sequelize");
+const sequelize = new Sequelize(env.DB_DATABASE, env.username, env.password, {
+  host: env.DB_HOST,
+  dialect: env.DB_DIALECT,
+  operatorsAliases: false,
+  pool: {
+    max: env.POOL.max,
+    min: env.POOL.min,
+    acquire: env.POOL.acquire,
+    idle: env.POOL.idle,
+  },
+});
+
 class AuthModel {
   hashPassword = (password) => {
     const hashedPassword = bcrypt.hashSync(`${password}`, salt);

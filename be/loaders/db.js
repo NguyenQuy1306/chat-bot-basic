@@ -1,5 +1,5 @@
 let { env } = require("../config");
-const mysql = require("mysql");
+const mysql = require("mysql2");
 
 const dbConfg = {
   host: env.DB_HOST,

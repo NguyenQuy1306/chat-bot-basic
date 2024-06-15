@@ -1,16 +1,17 @@
 import React, { useState } from "react";
 import "./chatbot.css";
-import styles from "../styles/Trangchu.module.css";
-import botImg from "../images/chatbot.png";
+// import styles from "../styles/Trangchu.module.css";
+// import botImg from "../images/chatbot.png";
 // import { useSearch } from "../SearchContext";
-
-import avatarImg from "../images/chatbot.png"; // Ensure the path is correct
-
+// import avatarImg from "../images/chatbot.png"; // Ensure the path is correct
 const ChatbotComponent = () => {
   const [isChatVisible, setIsChatVisible] = useState(false);
-
   const handleStartChat = () => {
     setIsChatVisible(true);
+  };
+
+  const handleLogin = () => {
+    window.location.href = `${process.env.REACT_APP_BACKEND_SSO}?serviceURL=${process.env.REACT_APP_SERVICE_URL}`;
   };
 
   const initChat = () => {
@@ -30,9 +31,12 @@ const ChatbotComponent = () => {
           <button id="init" onClick={handleStartChat}>
             START CHAT
           </button>
+          <button id="init" onClick={handleLogin}>
+            LOGIN
+          </button>
         </div>
         <div>
-          <img src={avatarImg} alt="Chatbot" className="bot-img" />
+          {/* <img src={avatarImg} alt="Chatbot" className="bot-img" /> */}
         </div>
       </div>
       {isChatVisible && (
@@ -43,7 +47,7 @@ const ChatbotComponent = () => {
           <div className="child" id="chatbot">
             <div className="header">
               <div className="h-child">
-                <img src={avatarImg} alt="avatar" id="avatar" />
+                {/* <img src={avatarImg} alt="avatar" id="avatar" /> */}
                 <div>
                   <span className="name">Chatbot</span>
                   <br />
